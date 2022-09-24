@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--dothome에서 아마존 서버로 변경하기-->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Room Escape</title>
+    <link rel="stylesheet" href="./css/tutorial.css">
+</head>
+<body>
+<section class="ground" id="root">
+    <div class="cursor_follower"></div>
+    <!-- 처음 화면에 뜨는 내용 -->
+    <div onclick="toSecond()" class="contentBx">
+        <h1 class="greeting">튜토리얼에 오신 것을 환영합니다!!</h1>
+        <h2 class="toKeep">계속 하시려면 클릭을 해주세요.</h2>
+    </div>
+
+    <!-- 클릭 후 2번째 내용 -->
+    <div class="contentBx2">
+        <p class="explanation">
+            <em>특정 그림</em>이나 <em>글</em>에서 마우스 포인터가 <em>변경</em>되는 경우가 있습니다!
+        </p>
+        <p class="explanation">
+            여기서 숨겨진 <em>단서</em>를 발견할 수 있는데요. 과연 그 단서를 통해 <em>문제</em>를 풀 수 있을까요?
+        </p>
+    </div>
+    <div class="contentBx2_copy">
+        <p class="explanation">
+            <em>특정 그림</em>이나 <em>글</em>에서 마우스 포인터가 <em>변경</em>되는 경우가 있습니다!
+        </p>
+        <p class="explanation">
+            여기서 숨겨진 <em>단서</em>를 발견할 수 있는데요. 과연 그 단서를 통해 <em>문제</em>를 풀 수 있을까요?
+        </p>
+    </div>
+
+    <div class="mouseMove">
+        <h2 class="movingMouse">마우스를 움직여 보세요!!</h2>
+        <h2 onclick="toThird()" class="toKeep2">계속 하시려면 <em class="toNext">여기를 클릭</em>하세요.</h2>
+    </div>
+
+    <!-- 3번째 화면 -->
+    <div class="bulb">
+        <!--<img class="questionMark" src="questionmark.png" alt="questionmark">-->
+        <div onclick="toFourth()" class="energy">
+            <span style="--cir:#fbad04;--i:18px;--d:2.5s;"></span>
+            <span style="--cir:#03a1d9;--i:13px;--d:5s;"></span>
+            <span style="--cir:#f7036d;--i:15px;--d:7.5s;"></span>
+            <span style="--cir:#93ff16;--i:20px;--d:10s;"></span>
+        </div>
+    </div>
+
+    <div class="contentBx3">
+        <p class="explanation"> 위의 <em>불빛</em>을 <em>클릭</em>해보세요. </p>
+    </div>
+
+    <!-- 4번째 화면 -->
+    <div class="light">
+        <div class="wire"></div>
+        <div class="bulb2">
+            <span></span>
+            <span></span>
+        </div>
+        <div class="switch">
+            <div class="btn"></div>
+        </div>
+    </div>
+    <audio id="audio" src="click.mp3" autostart="false"></audio>
+    <!-- 포스트잇 같은 것이 4개 정도 배치되어 있고, 마우스 포인터가 손 모양으로 바뀐다.
+        클릭시 숨겨진 글자 '시, 작, 하, 기' 가 나올 것
+        각 종이에 숨겨진 문자들을 찾으셨나요? 그럼 찾은 해답을 작성하러 가보실까요?
+        '정답' 표시의 버튼(?)이 형성된다. 버튼을 누르면 답을 작성할 수 있는 네모 창이 뜨고 입력후 확인하기를 누르면 모든 페이드 아웃 된 이후
+        정답을 찾아내셨습니다! 모든 준비가 끝마쳐진거 같습니다. 그럼 한 번 문제를 풀러 가볼까요? 화면이 뜨고 클릭하면 본격적인 1번문제로 넘어가는 형식으로 만들 것 -->
+</section>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!--움직이는 포스트잇 제이쿼리-->
+<!--<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+<script>
+    /* 로딩 후 뜨는 화면(1번째 화면) */
+    $(document).ready(function () {
+        $('.ground').fadeIn(1000);
+        $('.ground').css('display', 'flex');
+        $('.mouseMove').css('transition', 'opacity 700ms').css('opacity', 1);
+    });
+
+    /* 마우스 커서 움직임과 효과 */
+    const follower = document.querySelector(".cursor_follower");
+    document.addEventListener("mousemove", (e) => {
+        gsap.to(follower, {duration: 0.3, left: e.pageX - 15, top: e.pageY - 15});
+        //오버 효과
+        document.querySelectorAll(".explanation em").forEach(em => {
+            em.addEventListener("mouseenter", () => {
+                follower.classList.add("active");
+            });
+            em.addEventListener("mouseleave", () => {
+                follower.classList.remove("active");
+            });
+        });
+        document.querySelectorAll(".mouseMove .toKeep2 .toNext").forEach(em => {
+            em.addEventListener("mouseenter", () => {
+                follower.classList.add("active2");
+            });
+            em.addEventListener("mouseleave", () => {
+                follower.classList.remove("active2");
+            });
+        });
+        document.querySelectorAll(".contentBx3 .explanation em").forEach(em => {
+            em.addEventListener("mouseenter", () => {
+                follower.classList.add("active3");
+            });
+            em.addEventListener("mouseleave", () => {
+                follower.classList.remove("active3");
+            });
+        });
+        //출력
+        document.querySelector(".pageX").innerText = e.pageX;
+        document.querySelector(".pageY").innerText = e.pageY;
+    });
+
+    /* 1번째 화면에서 mouseover/mouseout 이벤트 */
+    var hidingBox = document.querySelector('.greeting');
+    hidingBox.addEventListener("mouseover", function (event) {
+        $('.greeting').css('cursor', 'pointer').css('transition', 'opacity 0.5s').css('opacity', 1);
+        $('.toKeep').css('cursor', 'pointer').css('transition', 'opacity 0.5s').css('opacity', 1);
+        $('.movingMouse').css('transition', 'opacity 300ms').css('opacity', 0);
+    })
+    hidingBox.addEventListener("mouseout", function (event) {
+        $('.greeting').css('transition', 'opacity 0.5s').css('opacity', 0);
+        $('.toKeep').css('transition', 'opacity 0.5s').css('opacity', 0);
+        $('.movingMouse').css('transition', 'opacity 300ms').css('opacity', 1);
+    })
+    var hidingBox = document.querySelector('.toKeep');
+    hidingBox.addEventListener("mouseover", function (event) {
+        $('.greeting').css('cursor', 'pointer').css('transition', 'opacity 0.5s').css('opacity', 1);
+        $('.toKeep').css('cursor', 'pointer').css('transition', 'opacity 0.5s').css('opacity', 1);
+        $('.movingMouse').css('transition', 'opacity 300ms').css('opacity', 0);
+    })
+    hidingBox.addEventListener("mouseout", function (event) {
+        $('.greeting').css('transition', 'opacity 0.5s').css('opacity', 0);
+        $('.toKeep').css('transition', 'opacity 0.5s').css('opacity', 0);
+        $('.movingMouse').css('transition', 'opacity 300ms').css('opacity', 1);
+    })
+
+    /* contentBx 클릭시 이벤트(2번째 화면으로 넘어가는 내용) | 함수 : toSecond() */
+    function toSecond() {
+        $('.contentBx').fadeOut(500);
+
+        setTimeout(function () {
+            $('.contentBx2').fadeIn(500);
+            $('.mouseMove').css('transition', 'opacity 300ms').css('opacity', 1);
+            $('.movingMouse').css('transition', 'opacity 300ms').css('opacity', 1);
+        }, 500);
+
+        setTimeout(function () {
+            fixedScreen();
+            $('.movingMouse').fadeOut(500);
+
+            function fixedScreen() {
+                $('.contentBx2_copy').css('display', 'block');
+                /* 마우스 효과를 제거하여 자연스레 화면 전환 유도하기 */
+                hidingBox2.removeEventListener("mouseover", mouseOver);
+                hidingBox2.removeEventListener("mouseout", mouseOut);
+                setTimeout(function () {
+                    $('.contentBx2_copy .explanation').css('transition', 'opacity 0.5s').css('opacity', 1);
+                    $('.contentBx2 .explanation').css('transition', 'opacity 0.5s').css('opacity', 0);
+                    $('.toKeep2').fadeIn(500);
+                }, 500);
+            }
+        }, 5000);
+    }
+
+    /* 2번째 화면에서 mouseover/mouseout 이벤트 */
+    var hidingBox2 = document.querySelector('.contentBx2');
+    var mouseOver = function (event) {
+        $('.contentBx2 .explanation').css('transition', 'opacity 0.5s').css('opacity', 1);
+        $('.movingMouse').css('transition', 'opacity 300ms').css('opacity', 0);
+    }
+    hidingBox2.addEventListener("mouseover", mouseOver);
+    var mouseOut = function (event) {
+        $('.contentBx2 .explanation').css('transition', 'opacity 0.5s').css('opacity', 0);
+        $('.movingMouse').css('transition', 'opacity 300ms').css('opacity', 1);
+    }
+    hidingBox2.addEventListener("mouseout", mouseOut);
+
+
+    /* mouseMove의 toKeep 클릭시 이벤트(3번째 화면으로 넘어가는 내용) | 함수 : toThird() */
+    function toThird() {
+        $('.contentBx2').fadeOut(500);
+        $('.contentBx2_copy').fadeOut(500);
+        $('.toKeep2').fadeOut(500);
+        setTimeout(function () {
+            $('.contentBx3').fadeIn(500);
+            $('.bulb').fadeIn(500);
+        }, 500);
+
+        /* 불빛 클릭하도록 유도하는 페이지 */
+        setTimeout(function () {
+            $('.contentBx3').css('display', 'flex');
+            $('.bulb').css('display', 'flex');
+            $('.energy').css('display', 'flex');
+        }, 500);
+        setTimeout(function () {
+            $('.energy span').css('transition', 'opacity 0.5s').css('opacity', 1);
+        },1000);
+
+        /* 움직이는 포스트잇 효과(흥미 유발에 저조하다는 판단에 폐지) */
+        /*
+        $('.contentBx3').ready(function () {
+            $('.contentBx3').append("<div class='randomBox'><p>드래그나<br> 클릭해보세요.</p></div>");
+            $('.contentBx3').append("<div class='randomBox'><p>드래그나<br> 클릭해보세요.</p></div>");
+            $('.contentBx3').append("<div class='randomBox'><p>드래그나<br> 클릭해보세요.</p></div>");
+            $('.contentBx3').append("<div class='randomBox'><p>드래그나<br> 클릭해보세요.</p></div>");
+
+            $(".randomBox").each(function () {
+                $(this).css({
+                    left: Math.random() * ($('.contentBx3').width() - $(this).width()),
+                    top: Math.random() * ($('.contentBx3').height() - $(this).height())
+                });
+            });
+
+            $(".randomBox").draggable({
+                cursor: "move",
+                stack: ".randomBox",
+                opacity: 0.8
+            });
+            $(".post").bind("dragstart", function (event, ui) {
+                // $(this).addClass("color");	//bgi 체인지
+            });
+            $(".post").bind("dragstop", function (event, ui) {
+                // $(this).removeClass("color")	//bgi 체인지
+            });
+        });
+        */
+    }
+
+    /* 불빛 클릭시 이벤트(4번째 화면으로 넘어가는 내용) | 함수 : toFourth() */
+    function toFourth() {
+        $('.bulb').fadeOut(500);
+        $('.contentBx3').fadeOut(500);
+        $('.ground').fadeOut(500);
+        setTimeout(function () {
+            $('.ground').css('background', '#222');
+            $('.ground').fadeIn(500);
+            $('.ground').css('display', 'flex');
+            $('.light').css('display', 'block');
+        }, 1000);
+
+        let btn = document.querySelector('.btn');
+        let body = document.querySelector('.ground');
+        let audio = document.querySelector('#audio');
+        btn.onclick = function () {
+            body.classList.toggle('on');
+            audio.play();
+            console.log($('#root').attr('class'));
+            if ($('#root').hasClass('on')) {
+                $('.ground').css('background', 'radial-gradient(#555, #111)');
+            } else {
+                $('.ground').css('background', '#222');
+            }
+        }
+    }
+</script>
+</body>
+</html>

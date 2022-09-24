@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--dothome에서 아마존 서버로 변경하기-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Room Escape</title>
+        <link rel="stylesheet" href="./css/front_cover.css">
+
+        <!-- 추후에 추가적으로 넣을 부분 -->
+        <!-- 파이썬을 이용한 ajax 활용을 통한 서버와의 연결 형성 -->
+    </head>
+    <body>
+        <section class="page1">
+            <div class="contentBx" id="background">
+                <h1 class="neon">Room Escape</h1>
+                <h2 class="from">By Hanyang University</h2>
+                <a href="#" class="btn">Enter the Room</a>
+            </div>
+            <div class="contentBx" id="frontground">
+                <h1 class="neon">Room Escape</h1>
+                <h2>By Hanyang University</h2>
+                <a href="#" class="btn">Enter the Room</a>
+            </div>
+            <div class="circle"></div>
+        </section>
+
+        <section class="page2">
+            <div class="toBack">
+                <a href="#" class="back">
+                    <img src="./image/door1.png">
+                </a>
+            </div>
+            <div class="entering">
+                <div class="theName">
+                    <h2>name : </h2>
+                    <input type="text" class="name" placeholder="이름을 입력하세요.">
+                </div>
+                <p>
+                    이 방탈출은 2020년 4월 코로나가 유행할 당시,<br> 한양대학교에서 오픈카톡방을 통해 실시한 방탈출입니다.<br>
+                    그 때를 기억하며 웹사이트로 구현해봤습니다.
+                </p>
+                <a href="#" class="start">Start!!</a>
+            </div>
+        </section>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+            const pos = document.documentElement;
+            pos.addEventListener("mousemove", e => {
+                pos.style.setProperty('--x', e.clientX + 'px');
+                pos.style.setProperty('--y', e.clientY + 'px');
+            });
+
+            const circle = document.querySelector('.circle');
+            const background = document.querySelector('#background');
+            const frontground = document.querySelector('#frontground');
+            pos.onclick = function() {
+                $('.circle').fadeOut();
+                /* 흰 원 제거 => 버튼 클릭 가능 */
+                var changing = background.animate([
+                    {filter: 'blur(10px)'},
+                    {filter: 'blur(0px)'}
+                ], 500);
+                /* 필터 blur 효과 부드럽게 사라지기 */
+                changing.addEventListener('finish', function() {
+                    background.style.filter = "blur(0)";
+                });
+                /* 앞 쪽 화면 지우기 */
+                $('#frontground').fadeOut();
+            }
+
+            /* div 전환 (page1 -> page2) */
+            const btn = document.querySelector('.btn');
+            btn.onclick = function() {
+                $('.page1').fadeOut();
+                $('.page2').fadeIn();
+            }
+
+            /* 마우스를 올릴 경우 이미지 바뀌기 */
+            $(document).ready(function() {
+                $('img').mouseover(function() {
+                    $(this).attr('src', './image/door2.png');
+                }).mouseout(function() {
+                    $(this).attr('src', './image/door1.png');
+                });
+            });
+
+            /* 클릭 시 다시 페이지 전환 (page2 -> page1) */
+            const out = document.querySelector('.back');
+            out.onclick = function() {
+                $('.page2').fadeOut();
+                $('.page1').fadeIn();
+            }
+            
+            /* 이름 입력하고 버튼 클릭 시 00님 환영합니다! 도출 */
+            const start = document.querySelector('.start');
+            const name = document.querySelector('.name');
+            start.onclick = function() {
+                if ((name.value == "") || (name.value == null)) {
+                    alert("이름을 입력해주세요.");
+                } else {
+                    alert(name.value + "님 환영합니다!");
+                    $('.page1').fadeOut(500);
+                    $('.page2').fadeOut(500);
+                    // 임시 연결 - 서버 연 후에 새롭게 연결하기
+                    setTimeout(function () {
+                        location.href = "tutorial.html";
+                    },500);
+                }
+            }
+        </script>
+    </body>
+</html>
